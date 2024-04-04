@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
+[Produces("application/json")]
 public class UsersController : ControllerBase
 {
     private readonly AppDbContext _context;
