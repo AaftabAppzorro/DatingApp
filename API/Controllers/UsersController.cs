@@ -18,7 +18,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet] //  api/users
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+    public async Task<ActionResult<List<AppUser>>> GetUsers()
     {
         var users = await _context.Users.ToListAsync();
         return users;
