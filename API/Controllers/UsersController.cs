@@ -18,15 +18,22 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet] //  api/users
-    public async Task<ActionResult<List<AppUser>>> GetUsers()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
     {
         var users = await _context.Users.ToListAsync();
+        //return Ok(users);
         return users;
     }
 
     [HttpGet("{id}")] //  api/users/id
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AppUser>> GetUser(int id)
     {
+        //return Ok(await _context.Users.FindAsync(id));
         return await _context.Users.FindAsync(id);
     }
 }
