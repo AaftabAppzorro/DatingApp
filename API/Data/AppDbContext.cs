@@ -9,5 +9,9 @@ public class AppDbContext : DbContext
     {
     }
 
-    public DbSet<AppUser> Users;
+    protected AppDbContext(DbContextOptions contextOptions) : base(contextOptions)
+    {
+    }
+
+    public DbSet<AppUser> Users {get; set;}
 }
