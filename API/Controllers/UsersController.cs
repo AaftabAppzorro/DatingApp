@@ -1,13 +1,16 @@
 ﻿using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class UsersController : ControllerBase
+[Route("api/users")]
+[Produces("application/json")]
+[Authorize]
+public class UsersController : BaseApiController
 {
     private readonly AppDbContext _context;
 
@@ -17,15 +20,20 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet] //  api/users
-    public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<List<AppUser>> GetUsers()
     {
-        var users = await _context.Users.ToListAsync();
-        return users;
+        return await _context.Users.ToListAsync();
     }
 
     [HttpGet("{id}")] //  api/users/id
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<AppUser>> GetUser(int id)
     {
+        //return Ok(await _context.Users.FindAsync(id));
         return await _context.Users.FindAsync(id);
     }
 }
