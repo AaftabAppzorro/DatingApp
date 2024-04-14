@@ -5,6 +5,7 @@ using API.DTOs;
 using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 
 namespace API.Controllers
@@ -16,8 +17,10 @@ namespace API.Controllers
         private readonly AppDbContext _context;
         private readonly ITokenService _tokenService;
 
-        public AccountController(AppDbContext context, ITokenService tokenService)
+         private readonly IMapper _mapper;
+        public AccountController(AppDbContext context, ITokenService tokenService, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
             _tokenService = tokenService;
         }
@@ -25,18 +28,15 @@ namespace API.Controllers
         [HttpPost("register")]   //api/account/register
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            var IsUserAlreadyExisted = await _context.Users.AnyAsync(u => u.UserName ==registerDto.Username.ToLower());
+            if (await UserExists(registerDto.Username)) return BadRequest("User already exist. Try login to your account.");
 
-            if(IsUserAlreadyExisted) return BadRequest("User already exist. Try login to your account.");
+            var user = _mapper.Map<AppUser>(registerDto);
 
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                UserName = registerDto.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
 
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
@@ -44,7 +44,8 @@ namespace API.Controllers
             return new UserDto
             {
                 Username = registerDto.Username,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
 
@@ -64,8 +65,14 @@ namespace API.Controllers
             {
                 Username = loginDto.Username,
                 Token = _tokenService.CreateToken(user),
-                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+                PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+                KnownAs = user.KnownAs
             };
+        }
+
+        private async Task<bool> UserExists(string username)
+        {
+            return await _context.Users.AnyAsync(x => x.UserName == username.ToLower());
         }
     }
 }
