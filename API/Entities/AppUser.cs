@@ -16,6 +16,10 @@ public class AppUser
         public string Interests { get; set; }
         public string City { get; set; }
         public string Country { get; set; }
-        public ICollection<Photo> Photos { get; set; }
 
+        //public ICollection<Photo> Photos { get; set; }
+        public List<Photo> Photos { get; set; } = new();
+        
+        public List<UserLike> LikedByUsers { get; set; } = new();
+        public List<UserLike> LikedUsers { get; set; } = new();
 }
