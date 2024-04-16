@@ -5,6 +5,7 @@ using API.Interfaces;
 using AutoMapper;
 using API.Entities;
 using API.Extensions;
+using API.Helpers;
 
 namespace API.Controllers;
 
@@ -26,17 +27,23 @@ public class UsersController : BaseApiController
     }
 
     [HttpGet] //  api/users
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IEnumerable<MemberDto>> GetUsers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
     {
-        return await _userRepository.GetMembersAsync();
+        var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            userParams.CurrentUsername = user.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender = user.Gender == "male" ? "female" : "male";
+
+            var users = await _userRepository.GetMembersAsync(userParams);
+
+            Response.AddPaginationHeader(users.CurrentPage, users.PageSize, 
+                users.TotalCount, users.TotalPages);
+
+            return Ok(users);
     }
 
      [HttpGet("{username}", Name = "GetUser")] //  api/users/username
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<MemberDto>> GetUser(string username)
     {
         return await _userRepository.GetMemberAsync(username);
