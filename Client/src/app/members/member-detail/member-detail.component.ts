@@ -18,7 +18,7 @@ import { MemberMessagesComponent } from '../member-messages/member-messages.comp
 })
 export class MemberDetailComponent implements OnInit{
   @ViewChild('memberTabs', {static: true}) memberTabs: TabsetComponent | undefined;
-  member: Member | undefined;
+  member: Member = {} as Member;
   images: GalleryItem[] = [];
   activeTab: TabDirective | undefined;
   messages: Message[] = [];
@@ -31,8 +31,9 @@ export class MemberDetailComponent implements OnInit{
     });
 
     this.route.queryParams.subscribe(params => {
-      params['tab'] ? this.selectTab(params['tab']) : this.selectTab(0);
-    })
+      //params['tab'] ? this.selectTab(params['tab']) : this.selectTab('Messages');
+      params['tab'] && this.selectTab(params['tab']);
+    });
 
     this.getImages();
   }
@@ -53,9 +54,10 @@ export class MemberDetailComponent implements OnInit{
    }
   }
 
-  selectTab(tabId: number) {
+  selectTab(heading: string) {
     if(this.memberTabs){
-      this.memberTabs.tabs[tabId].active = true;
+      //this.memberTabs.tabs[tabId].active = true;
+      this.memberTabs.tabs.find(x => x.heading === heading)!.active = true;
     }
   }
 
