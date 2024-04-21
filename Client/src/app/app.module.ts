@@ -29,6 +29,8 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
 import { HasRoleDirective } from './_directives/has-role.directive';
 import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,8 @@ import { UserManagementComponent } from './admin/user-management/user-management
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy}
   ],
   bootstrap: [AppComponent]
 })
