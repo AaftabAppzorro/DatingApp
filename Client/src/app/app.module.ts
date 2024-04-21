@@ -24,6 +24,13 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { DateInputComponent } from './_forms/date-input/date-input.component';
 import { TextInputComponent } from './_forms/text-input/text-input.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { HasRoleDirective } from './_directives/has-role.directive';
+import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
+import { RouteReuseStrategy } from '@angular/router';
+import { CustomRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
 
 @NgModule({
   declarations: [
@@ -41,7 +48,12 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
     MemberEditComponent,
     PhotoEditorComponent,
     DateInputComponent,
-    TextInputComponent
+    TextInputComponent,
+    AdminPanelComponent,
+    HasRoleDirective,
+    UserManagementComponent,
+    PhotoManagementComponent,
+    RolesModalComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +68,8 @@ import { TextInputComponent } from './_forms/text-input/text-input.component';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
+    {provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy}
   ],
   bootstrap: [AppComponent]
 })
