@@ -31,6 +31,7 @@ import { RolesModalComponent } from './modals/roles-modal/roles-modal.component'
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
+import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { CustomRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
     HasRoleDirective,
     UserManagementComponent,
     PhotoManagementComponent,
-    RolesModalComponent
+    RolesModalComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

@@ -17,9 +17,9 @@ export class NavComponent implements OnInit {
 
   login() {
     this.accountService.login(this.model).subscribe({
-      next: response => {
-        if(response != undefined) {console.log(response);};
+      next: _ => {
         this.router.navigateByUrl('/members');
+        this.model = {}; //To remove autocomplete after logout (i.e. no username & password will be autofilled)
       }
     });
   }
