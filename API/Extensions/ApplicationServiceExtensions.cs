@@ -11,10 +11,10 @@ namespace API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options => 
-            {
-                options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
-            });
+            // services.AddDbContext<AppDbContext>(options => 
+            // {
+            //     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            // });
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
